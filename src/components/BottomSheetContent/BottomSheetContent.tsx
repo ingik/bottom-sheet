@@ -4,6 +4,15 @@ const BottomSheetContent = () => {
   const arr = [{ index: 0 }, { idnex: 1 }, { index: 2 }];
   return (
     <Container>
+      {/* <div
+        style={{
+          backgroundColor: "red",
+          opacity: 0.3,
+          height: "200px",
+          width: "100%",
+          marginBottom: 3,
+        }}
+      /> */}
       {arr.map((list) => {
         return (
           <div
@@ -15,7 +24,7 @@ const BottomSheetContent = () => {
               width: "100%",
               marginBottom: 3,
             }}
-          ></div>
+          />
         );
       })}
     </Container>

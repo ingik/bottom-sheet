@@ -16,6 +16,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
+  box-shadow: 0px -5px 15px -5px gray;
 `;
 
 const Indicator = styled.div`
