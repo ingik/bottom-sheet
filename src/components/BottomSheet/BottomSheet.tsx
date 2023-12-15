@@ -21,20 +21,18 @@ const BottomSheet: React.FC<Props> = ({
   snapPoint,
   children,
 }) => {
-  const [startY, setStartY] = useState(0);
-
   console.log("VIEWPORT ", window.innerHeight);
 
+  const [open, setOpen] = useState(isOpen);
+  const [startY, setStartY] = useState(0);
   const viewHeight = window.innerHeight;
-
+  const pointFirst = snapPoint[0];
   const pointLast = snapPoint[snapPoint.length - 1];
 
   const map = snapPoint?.map((list) => {
     if (typeof list === "number") return viewHeight + list;
     else return list;
   });
-
-  // const map = [viewHeight, ...convert];
 
   console.log("MAP >>", map);
 
@@ -60,10 +58,10 @@ const BottomSheet: React.FC<Props> = ({
 
   let bottom = sheetRef.current?.getBoundingClientRect().bottom;
 
-  const dragStart = useCallback((e: React.TouchEvent) => {
+  const dragStart = (e: React.TouchEvent) => {
     console.log("start >>", e.changedTouches[0].clientY);
     setStartY(e.changedTouches[0].clientY);
-  }, []);
+  };
 
   const dragEnd = () => {
     if (!map) return;
@@ -77,6 +75,8 @@ const BottomSheet: React.FC<Props> = ({
       if (!end) return;
 
       console.log("END >>", end);
+      if (end === pointFirst) setOpen(false);
+      if (end === pointLast) setOpen(true);
 
       sheetRef.current?.style.setProperty(
         "transform",
@@ -107,17 +107,21 @@ const BottomSheet: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    console.log("is OPEN ", pointFirst, pointLast);
     if (isOpen) {
-      sheetRef.current?.style.setProperty("transform", "translateY(0)");
-      console.log(" OPEN !!");
-    } else {
       sheetRef.current?.style.setProperty(
         "transform",
         `translateY(${pointLast}px)`
       );
+      console.log(" OPEN !!");
+    } else {
+      sheetRef.current?.style.setProperty(
+        "transform",
+        `translateY(${pointFirst}px)`
+      );
       console.log(" CLOSE !!");
     }
-  }, [isOpen]);
+  }, [open, isOpen]);
 
   return (
     <Container
@@ -138,7 +142,8 @@ export default BottomSheet;
 
 const Container = styled.div<{ height: number }>`
   width: 100%;
-  height: ${(props) => props.height};
+  /* height: ${(props) => `${props.height}px`}; */
+  height: 100%;
   left: 0;
   bottom: 0;
   position: fixed;

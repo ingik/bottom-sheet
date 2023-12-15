@@ -11,7 +11,7 @@ const TestScreen: FunctionComponent = () => {
   };
 
   // const snapPoint = ["100px", "300px", "500px"];
-  const snapPoint = [200, 500];
+  const snapPoint = [400, 600];
 
   return (
     <>
@@ -19,6 +19,10 @@ const TestScreen: FunctionComponent = () => {
         <button title="dd" onClick={buttonPress} style={styles.button}>
           {"TEST BUTTON"}
         </button>
+
+        <div style={{ padding: 30 }}>
+          <text>bottom sheet test page</text>
+        </div>
 
         {/* <div
           style={{
