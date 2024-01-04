@@ -12,7 +12,7 @@ const Container = styled.div`
   background-color: white;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
-  height: 36px;
+  height: 40px;
   align-items: center;
   justify-content: center;
   display: flex;

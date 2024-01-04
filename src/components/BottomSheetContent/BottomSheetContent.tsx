@@ -1,9 +1,14 @@
+import { RefObject } from "react";
 import styled from "styled-components";
 
-const BottomSheetContent = () => {
-  const arr = [{ index: 0 }, { idnex: 1 }, { index: 2 }];
+interface Props {
+  contentRef: RefObject<HTMLDivElement>;
+}
+
+const BottomSheetContent: React.FC<Props> = ({ contentRef }) => {
+  const arr = [{ index: 0 }, { index: 1 }, { index: 2 }, { index: 3 }];
   return (
-    <Container>
+    <Container ref={contentRef}>
       {/* <div
         style={{
           backgroundColor: "red",
@@ -33,9 +38,10 @@ const BottomSheetContent = () => {
 
 const Container = styled.div`
   background-color: white;
-  height: 100%;
   width: 100%;
-  overflow: scroll;
+  overflow: auto;
+  height: 500px;
+  position: relative;
 `;
 
 export default BottomSheetContent;

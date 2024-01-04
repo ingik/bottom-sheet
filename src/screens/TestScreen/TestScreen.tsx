@@ -10,28 +10,18 @@ const TestScreen: FunctionComponent = () => {
     setOpen(!open);
   };
 
-  // const snapPoint = ["100px", "300px", "500px"];
-  const snapPoint = [400, 600];
+  const snapPoint = ["10%", "50%"];
 
   return (
     <>
       <Screen>
-        <button title="dd" onClick={buttonPress} style={styles.button}>
+        <button title="dd" onClick={buttonPress}>
           {"TEST BUTTON"}
         </button>
 
         <div style={{ padding: 30 }}>
           <text>bottom sheet test page</text>
         </div>
-
-        {/* <div
-          style={{
-            backgroundColor: "red",
-            width: "300px",
-            height: "300px",
-            marginTop: 300,
-          }}
-        ></div> */}
       </Screen>
       <BottomSheet sheetRef={ref} isOpen={open} snapPoint={snapPoint} />
     </>
@@ -42,11 +32,6 @@ export default TestScreen;
 
 const Screen = styled.div`
   background-color: gray;
-  overflow: hidden;
   width: 100vw;
   height: 100vh;
 `;
-
-const styles: { button: React.CSSProperties } = {
-  button: {},
-};
