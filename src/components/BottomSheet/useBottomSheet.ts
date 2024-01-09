@@ -1,91 +1,101 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { findClosestPoint } from "./utils";
 
-interface SheetDirection {
-  sheet: {
+interface SheetMetrics {
+  touchStart: {
     sheetY: number;
-    contentY: number;
+    touchY: number;
   };
-  sheetState: "up" | "none" | "down";
+  touchMove: {
+    movingDirection: "up" | "down" | "none";
+    prevTouchY?: number;
+  };
+  // isContentAreaTouched: boolean;
 }
 
 const useBottomSheet = (
   sheetRef: React.RefObject<HTMLDivElement>,
+  headerRef: React.RefObject<HTMLDivElement>,
   snapPoint: string[],
   isOpen?: boolean
 ) => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(isOpen || false);
-  const [startY, setStartY] = useState(0);
 
+  const metrics = useRef<SheetMetrics>({
+    touchStart: {
+      sheetY: 0,
+      touchY: 0,
+    },
+    touchMove: {
+      movingDirection: "none",
+      prevTouchY: undefined,
+    },
+  });
   const viewHeight = window.innerHeight;
-  const MIN_Y = 40;
-  const MAX_Y = viewHeight - 40;
+  const headerHeight = parseInt(headerRef.current?.style.height || "0");
+  const MIN_Y = headerHeight;
+  const MAX_Y = viewHeight - headerHeight;
 
   const pointFirst = parseInt(snapPoint[0]);
   const pointLast = parseInt(snapPoint[snapPoint.length - 1]);
 
-  const getSheetY = sheetRef.current?.getBoundingClientRect().top;
-
   const dragStart = (e: TouchEvent) => {
-    console.log("START ! ");
-    setStartY(e.changedTouches[0].clientY);
-  };
-
-  const dragEnd = () => {
-    if (!sheetRef.current) return;
-    if (!getSheetY) return;
-
-    // 시트 클릭 좌표 초기화
-    setStartY(0);
-
-    const closestPoint = findClosestPoint(
-      snapPoint,
-      viewHeight - sheetRef.current?.getBoundingClientRect().top
-    );
-
-    if (!closestPoint) return;
-    if (closestPoint === pointFirst) {
-      console.log("CLOSE !");
-      setOpen(false);
-    }
-    if (closestPoint === pointLast) {
-      console.log("OPEN !");
-
-      setOpen(true);
-    }
-
-    console.log(" CLOSE >>> ", closestPoint);
-
-    sheetRef.current?.style.setProperty(
-      "transform",
-      `translateY(${MAX_Y - closestPoint}px)`
-    );
+    // 첫 좌표 저장
+    const { touchStart } = metrics.current;
+    touchStart.touchY = e.changedTouches[0].clientY;
+    touchStart.sheetY = sheetRef.current?.getBoundingClientRect().top || 0;
   };
 
   const dragMove = (e: TouchEvent) => {
-    let dragOffset = e.changedTouches[0].clientY - startY;
+    const { touchMove, touchStart } = metrics.current;
+    let dragOffset = e.changedTouches[0].clientY - touchStart.touchY;
+    const currentTouch = e.touches[0];
 
-    console.log("drag", dragOffset);
+    console.log(" METRICS >>", metrics.current.touchMove.movingDirection);
+
+    if (touchMove.prevTouchY === undefined) {
+      touchMove.prevTouchY = touchStart.touchY;
+    }
+
+    if (touchMove.prevTouchY < currentTouch.clientY) {
+      touchMove.movingDirection = "down";
+    }
+
+    if (touchMove.prevTouchY > currentTouch.clientY) {
+      touchMove.movingDirection = "up";
+    }
+    const getSheetY = sheetRef.current?.getBoundingClientRect().top;
+
     if (!getSheetY) return;
     const sheetOffset = getSheetY + dragOffset;
     let nextSheetY = sheetOffset;
 
     if (nextSheetY <= MIN_Y) {
-      console.log("OVER MIN ! ! ! ! !");
       nextSheetY = MIN_Y;
     }
 
     if (nextSheetY >= MAX_Y) {
-      console.log("OVERMAX ! !  ! ! !");
       nextSheetY = MAX_Y;
     }
-
-    console.log("next point", sheetRef.current?.getBoundingClientRect().top);
 
     sheetRef.current?.style.setProperty(
       "transform",
       `translateY(${nextSheetY}px)`
+    );
+  };
+
+  const dragEnd = () => {
+    const getSheetY = sheetRef.current?.getBoundingClientRect().top;
+    if (!sheetRef.current) return;
+    if (!getSheetY) return;
+
+    const closestPoint = findClosestPoint(snapPoint, viewHeight - getSheetY);
+
+    console.log("dragEnd Point  >>", closestPoint);
+    if (!closestPoint) return;
+    sheetRef.current?.style.setProperty(
+      "transform",
+      `translateY(${MAX_Y - closestPoint}px)`
     );
   };
 
@@ -94,7 +104,6 @@ const useBottomSheet = (
     sheetRef.current?.addEventListener("touchstart", dragStart);
     sheetRef.current?.addEventListener("touchmove", dragMove);
     sheetRef.current?.addEventListener("touchend", dragEnd);
-    sheetRef.current?.style.setProperty("visibility", "visible");
 
     return () => {
       sheetRef.current?.removeEventListener("touchstart", dragStart);

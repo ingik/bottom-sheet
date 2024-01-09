@@ -10,7 +10,7 @@ const TestScreen: FunctionComponent = () => {
     setOpen(!open);
   };
 
-  const snapPoint = ["10%", "50%"];
+  const snapPoint = ["40px", "500px"];
 
   return (
     <>
@@ -31,7 +31,7 @@ const TestScreen: FunctionComponent = () => {
 export default TestScreen;
 
 const Screen = styled.div`
-  background-color: gray;
+  background-color: white;
   width: 100vw;
   height: 100vh;
 `;

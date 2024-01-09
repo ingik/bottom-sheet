@@ -6,6 +6,7 @@ import {
   RefObject,
   useEffect,
   useLayoutEffect,
+  useRef,
 } from "react";
 import { createPortal } from "react-dom";
 import useBottomSheet from "./useBottomSheet";
@@ -24,16 +25,18 @@ const BottomSheet: React.FC<Props> = ({
   children,
   handleHeight,
 }) => {
-  const { sheetRef: useSheetRef, contentRef } = useBottomSheet(
+  const headerRef = useRef<HTMLDivElement>(null);
+  const { sheetRef: useSheetRef, contentRef: useContentRef } = useBottomSheet(
     sheetRef,
+    headerRef,
     snapPoint,
     isOpen
   );
 
   return createPortal(
-    <Container ref={useSheetRef} height={"500px"}>
-      <Header />
-      <BottomSheetContent contentRef={contentRef} />
+    <Container ref={useSheetRef}>
+      <Header headerRef={headerRef} />
+      <BottomSheetContent contentRef={useContentRef} />
       {children}
     </Container>,
     document.body
@@ -42,14 +45,12 @@ const BottomSheet: React.FC<Props> = ({
 
 export default BottomSheet;
 
-const Container = styled.div<{ height: string }>`
+const Container = styled.div`
   width: 100%;
-  height: ${() => `${window.innerHeight - 40}px`};
+  height: ${() => `${window.innerHeight - 1}px`};
   left: 0;
-  /* bottom: ${({ height }) => `-${height}`}; */
   bottom: 0;
   z-index: 1;
   transition-duration: 500ms;
   position: absolute;
-  visibility: hidden;
 `;

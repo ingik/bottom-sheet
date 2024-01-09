@@ -1,13 +1,14 @@
 export const convertToPixels = (value: string, unit: string) => {
   // 측정을 위한 임시 요소 생성
   const tempElement = document.createElement("div");
-  tempElement.style.width = "1" + unit;
+  tempElement.style.height = "1" + unit;
   tempElement.style.visibility = "hidden";
   tempElement.style.position = "absolute";
 
   // 크기를 측정
   document.body.appendChild(tempElement);
-  const oneUnitInPixels = tempElement.offsetWidth;
+  const oneUnitInPixels = tempElement.getBoundingClientRect().height;
+  console.log("convert Pixel >>", oneUnitInPixels);
 
   // 임시 요소 제거
   document.body.removeChild(tempElement);

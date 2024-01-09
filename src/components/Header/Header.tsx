@@ -1,8 +1,12 @@
+import { RefObject } from "react";
 import styled from "styled-components";
 
-const Header = () => {
+interface Props {
+  headerRef: RefObject<HTMLDivElement>;
+}
+const Header: React.FC<Props> = ({ headerRef }) => {
   return (
-    <Container>
+    <Container ref={headerRef}>
       <Indicator />
     </Container>
   );
