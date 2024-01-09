@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { findClosestPoint } from "./utils";
+import { findClosestPoint } from "../utils";
 
 interface SheetMetrics {
   touchStart: {

@@ -9,7 +9,7 @@ import {
   useRef,
 } from "react";
 import { createPortal } from "react-dom";
-import useBottomSheet from "./useBottomSheet";
+import useBottomSheet from "../../hooks/useBottomSheet";
 
 interface Props extends PropsWithChildren {
   sheetRef: RefObject<HTMLDivElement>;
