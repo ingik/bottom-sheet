@@ -5,7 +5,7 @@ interface Props {
 }
 
 const BottomSheetProvider: FunctionComponent<Props> = ({ children }) => {
-  return <>{children}</>;
+  return <div>{children}</div>;
 };
 
 export default BottomSheetProvider;
