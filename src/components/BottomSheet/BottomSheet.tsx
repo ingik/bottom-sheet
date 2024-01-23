@@ -1,13 +1,7 @@
 import styled from "styled-components";
 import { Header } from "../Header";
 import { BottomSheetContent } from "../BottomSheetContent";
-import {
-  PropsWithChildren,
-  RefObject,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-} from "react";
+import { PropsWithChildren, RefObject, useRef } from "react";
 import { createPortal } from "react-dom";
 import useBottomSheet from "../../hooks/useBottomSheet";
 
@@ -26,13 +20,14 @@ const BottomSheet: React.FC<Props> = ({
   handleHeight,
 }) => {
   const headerRef = useRef<HTMLDivElement>(null);
+
   const { sheetRef: useSheetRef, contentRef: useContentRef } = useBottomSheet(
     sheetRef,
     headerRef,
-    snapPoint,
-    isOpen
+    snapPoint
   );
 
+  const test = () => {};
   return createPortal(
     <Container ref={useSheetRef}>
       <Header headerRef={headerRef} />
@@ -50,7 +45,9 @@ const Container = styled.div`
   height: ${() => `${window.innerHeight - 1}px`};
   left: 0;
   bottom: 0;
+  flex-direction: column;
   z-index: 1;
-  transition-duration: 500ms;
-  position: absolute;
+  transition-duration: 300ms;
+  position: fixed;
+  display: flex;
 `;

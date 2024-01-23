@@ -8,7 +8,6 @@ export const convertToPixels = (value: string, unit: string) => {
   // 크기를 측정
   document.body.appendChild(tempElement);
   const oneUnitInPixels = tempElement.getBoundingClientRect().height;
-  console.log("convert Pixel >>", oneUnitInPixels);
 
   // 임시 요소 제거
   document.body.removeChild(tempElement);
@@ -18,7 +17,7 @@ export const convertToPixels = (value: string, unit: string) => {
   return valueInPixels;
 };
 
-function parseCssSize(cssSize: string) {
+export const parseCssSize = (cssSize: string) => {
   // 정규식을 사용하여 숫자 부분과 단위 부분을 추출
   const match = cssSize.match(/^([+-]?\d*\.?\d+)([a-zA-Z%]*)$/);
 
@@ -31,7 +30,7 @@ function parseCssSize(cssSize: string) {
   const unit = match[2];
 
   return { value, unit };
-}
+};
 
 export const findClosestPoint = (arr: string[], target: number) => {
   if (arr.length === 0) {
@@ -43,12 +42,10 @@ export const findClosestPoint = (arr: string[], target: number) => {
     return convertToPixels(value, unit);
   });
 
-  console.log("CONVERT ARR >>", convertArr);
-  console.log("TARGET !>>", target);
-
   let closestValue = convertArr[0];
   let minDifference = Math.abs(target - closestValue);
 
+  // 가까운 값 찾기
   for (let i = 1; i < convertArr.length; i++) {
     let currentDifference = Math.abs(target - convertArr[i]);
 

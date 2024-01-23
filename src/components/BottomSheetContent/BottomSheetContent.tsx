@@ -33,6 +33,7 @@ const Container = styled.div`
   overflow: auto;
   height: 500px;
   position: relative;
+  -webkit-overflow-scrolling: touch;
 `;
 
 export default BottomSheetContent;
